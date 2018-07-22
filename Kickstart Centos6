@@ -1,0 +1,58 @@
+#platform=x86, AMD64, or Intel EM64T
+#version=DEVEL
+# Firewall configuration
+firewall --enabled --http --ssh
+# Install OS instead of upgrade
+install
+# Use network installation
+url --url="http://mirrors.sonic.net/centos/7/os/x86_64/http://mirrors.sonic.net/centos/7/os/x86_64/	"
+# Root password
+rootpw --iscrypted $1$h0sPulj6$xQFB1IT7Fnp6UOnIOP7Ug0
+# System authorization information
+auth  --useshadow  --passalgo=sha512
+# Use graphical install
+graphical
+firstboot --disable
+# System keyboard
+keyboard us
+# System language
+lang en_US
+# SELinux configuration
+selinux --disabled
+# Installation logging level
+logging --level=info
+# Reboot after installation
+reboot
+# System timezone
+timezone  Africa/Abidjan
+# System bootloader configuration
+bootloader --location=mbr
+# Partition clearing information
+clearpart --all  
+# Disk partitioning information
+part /home --fstype="ext4" --size=4096
+part /boot --asprimary --fstype="ext4" --size=500
+part /tmp --fstype="ext4" --size=4096
+part / --fstype="ext4" --grow --size=1
+
+%post --interpreter=/bin/bash
+useradd bob
+useradd samantha
+useadd lisa
+yum install wget php  -y 
+yum install httpd -y
+service httpd start 
+
+wget -C  /tmp/https://wordpress.org/download/latest.tar.gz 
+tar xzvf   /tmp//tmp/https://wordpress.org/download/latest.tar.gz   -M  /var/www/html/
+%end
+
+%packages
+@ftp-server
+@mysql
+@mysql-client
+@office-suite
+@server-platform
+@system-management-snmp
+
+%end
